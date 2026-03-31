@@ -28,4 +28,5 @@ jobs:
 
      
       - name: Deploy locally
-        run: powershell -ExecutionPolicy Bypass -File ".\deploy.ps1"
+        shell: powershell -ExecutionPolicy Bypass -Command "{0}"
+        run: .\deploy.ps1
