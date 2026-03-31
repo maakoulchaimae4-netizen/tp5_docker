@@ -1,25 +1,30 @@
-name: Docker CI Pipeline
+name: CI/CD Docker
 
 on:
   push:
-    branches: [ main ]
+    branches:
+      - main
 
 jobs:
-  build-and-push:
-    runs-on: ubuntu-latest
-    
+  docker_build_deploy:   
+    name: Docker Build & Deploy
+    runs-on: self-hosted
+
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v3
-    
-    - name: Login to Docker Hub
-      uses: docker/login-action@v2
-      with:
-        username: ${{ secrets.DOCKER_USERNAME }}
-        password: ${{ secrets.DOCKER_PASSWORD }}
-    
-    - name: Build Docker image
-      run: docker build -t ${{ secrets.DOCKER_USERNAME }}/flask_app:v2 .
-    
-    - name: Push Docker image
-      run: docker push ${{ secrets.DOCKER_USERNAME }}/flask_app:v2
+      - uses: actions/checkout@v3
+      
+      
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+         username: ${{ secrets.DOCKERHUB_USERNAME }}
+         password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Build and push Docker image
+        shell: powershell
+        run: |
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/tp5_docker:latest .
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/tp5_docker:latest
+
+     
+      - name: Deploy locally
+        run: powershell -ExecutionPolicy Bypass -File ".\deploy.ps1"
