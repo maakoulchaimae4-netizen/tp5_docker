@@ -22,6 +22,7 @@ jobs:
       - name: Build and push Docker image
         shell: powershell
         run: |
+          Set-ExecutionPolicy Bypass -Scope Process -Force
           docker build -t ${{ secrets.DOCKER_USERNAME }}/tp5_docker:latest .
           docker push ${{ secrets.DOCKER_USERNAME }}/tp5_docker:latest
 
